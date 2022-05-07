@@ -22,4 +22,4 @@ def parse_arguments():
 if __name__ == "__main__":
     args = parse_arguments()
 
-    simulate_sequencing(args.fasta, args.coverage, args.avgquality, args.insertsize, args.readlength, args.probsnv, args.probins, args.probdel)
+    simulate_sequencing(args)

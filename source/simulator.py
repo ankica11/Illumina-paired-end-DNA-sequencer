@@ -1,3 +1,4 @@
+from datetime import datetime
 from email.errors import FirstHeaderLineIsContinuationDefect
 import timeit
 from Bio import SeqIO
@@ -38,7 +39,8 @@ def generate_SAM(read_bases, qualities, self_position, mate_postion, avg_quality
 
 
 #------------------------------------FASTQ and SAM generating----------------------------------------------------------------------------------------------
-def generate_fastq_files(coverage, single_read_length, average_quality, ins_size, fasta_filename, snv_rate, ins_rate, del_rate):
+def generate_fastq_files(coverage, single_read_length, average_quality, ins_size, fasta_filename, snv_rate, ins_rate, del_rate,\
+                         fastq_path="out_fastq", sam_path="out_sam"):
     """ Function that loops through the reference genome which is presented as a dictionary {sequence_name, SeqRecord object}
         and does the sequencing process on each sequence/contig in genome separately as a result of this process pairs of reads
         are generated and written into _1.fastq and _2.fastq files. The function also generates the SAM file with aligned reads
@@ -54,17 +56,17 @@ def generate_fastq_files(coverage, single_read_length, average_quality, ins_size
             del_rate - deletion rate, probability that some bases are missing in reads compared to reference genome
     
     """
-
+    t_start=datetime.now()
     
-    outdir="out_fastq"      #directory for output fastq files of simulator
+    out_dir_fastq_path = fastq_path      # directory for output fastq files of simulator, if not defined by user default is out_fastq
     
-    if not os.path.exists(outdir):
-        os.system('mkdir ' + outdir)
-     #creating empty fastq files in out directory
+    if not os.path.exists(out_dir_fastq_path):
+        os.system('mkdir ' + out_dir_fastq_path)
+    #creating empty fastq files in out directory
     fastq_filename_1=fasta_filename + "_1.fastq"
     fastq_filename_2=fasta_filename + "_2.fastq"
-    fastq_files = [os.path.join(outdir, fastq_filename_1),\
-                   os.path.join(outdir, fastq_filename_2)]
+    fastq_files = [os.path.join(out_dir_fastq_path, fastq_filename_1),\
+                   os.path.join(out_dir_fastq_path, fastq_filename_2)]
 
     #removing existing files
     for file in fastq_files:
@@ -73,11 +75,11 @@ def generate_fastq_files(coverage, single_read_length, average_quality, ins_size
     (fastq1_handle, fastq2_handle) = [open(filename, "w") for filename in fastq_files]
 
     #creating empty SAM file
-    out_sam_dir = "out_sam" #directory for output sam files of simulator
-    if not os.path.exists(out_sam_dir):
-        os.system('mkdir ' + out_sam_dir)
+    out_sam_dir_path = sam_path      # directory for output sam files of simulator, if not defined by user default is out_sam
+    if not os.path.exists(out_sam_dir_path):
+        os.system('mkdir ' + out_sam_dir_path)
     sam_filename = fasta_filename + ".sam"
-    sam_file_path = os.path.join(out_sam_dir, sam_filename)
+    sam_file_path = os.path.join(out_sam_dir_path, sam_filename)
     if os.path.exists(sam_file_path):
         os.remove(sam_file_path)
     sam_handle = open(sam_file_path, "w")
@@ -126,11 +128,6 @@ def generate_fastq_files(coverage, single_read_length, average_quality, ins_size
             #print("Read2 after:  {}".format(read2.seq))
             
             
-            #(read1_id, quality_scores1) = generate_read(fastq1_handle, read1, average_quality, seq_name, generated_read_pairs_num, 1)
-            #(read2_id, quality_scores2) = generate_read(fastq2_handle, reverse_complement(read2), average_quality, seq_name, generated_read_pairs_num, 2)
-            #(read2_id, quality_scores2) = generate_read(fastq2_handle, read2.reverse_complement(), average_quality, seq_name, generated_read_pairs_num, 2)
-            #print("Read2 before: {}\n Read2 after: {}".format(read2, read2.reverse_complement()))
-            
             
             #--------------------------Generating alignments for both reads in the same pair and writing them to SAM file----------------------
             generate_alignment_and_write_2_SAM(sam_handle, read1, pos + 1, pos+insert_size-paired_read_length+1, insert_size,\
@@ -144,31 +141,41 @@ def generate_fastq_files(coverage, single_read_length, average_quality, ins_size
     fastq2_handle.close()
     sam_handle.close()
 
+    t_end = datetime.now()
+    print("Generated 2x{} Bytes of FASTQ files at {}.\nGenerated {} Bytes of SAM file at {}.".format(os.path.getsize(fastq_files[0]), out_dir_fastq_path,\
+                                                  os.path.getsize(sam_file_path), out_sam_dir_path))
+
 nucleotides = ['A', 'T', 'C', 'G']
 
 
 
 
-def simulate_sequencing(fasta_filename, coverage, average_quality, insert_size, paired_read_length, snv_rate, ins_rate, del_rate):
+def simulate_sequencing(args):
+
+    t_start = datetime.now()
+    print("Illumina paired-end sequencing simulation has started at {}...".format(t_start))
+
     global genome_sequences_index
     global genome_sequences_dict
-    #fasta_filename = "sample.fasta"
-    #coverage = 1.43
-    #average_quality = 40
-    #insert_size = 700
-    #paired_read_length = 300
-    #snv_rate = 0.005
-    #ins_rate = 0.003
-    #del_rate = 0.002
-
+    fasta_filename = "D:/1master/1gi/projekat/GCF_000861905.1_ViralProj15445_genomic.fasta"
+    coverage = 1.43
+    average_quality = 40
+    insert_size = 150
+    paired_read_length = 50
+    snv_rate = 0.005
+    ins_rate = 0.003
+    del_rate = 0.002
+    fastq_path="D:/1master/1gi/projekat/"
+    sam_path=""
+    
     genome_sequences_dict = fasta_parsing(fasta_filename) # time: 1.123226 0.956
-    #genome_sequences_dict = fasta_parsing_large(fasta_filename)
-    
-    
-    print("Finished FASTA file parsing!")
+    fasta_filename = os.path.split(fasta_filename)[1]
     generate_fastq_files(coverage, paired_read_length, average_quality, insert_size, fasta_filename.replace(".fasta",""), snv_rate,\
-        ins_rate, del_rate)
-    print("Finished sequencing! FASTQ files and SAM file are generated...")
+        ins_rate, del_rate, fastq_path)
+
+    t_end = datetime.now()
+    print("Finished sequencing in {}.".format(t_end-t_start))
+    
     
 #t1 = timeit.timeit(lambda: simulate(), number=1)
 #print(t1)    
