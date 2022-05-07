@@ -1,0 +1,2 @@
+def anka():
+    print("Anka")
