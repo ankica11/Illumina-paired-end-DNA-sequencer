@@ -11,6 +11,7 @@ from sequencing_errors import simulate_sequencing_errors
 from read import calculate_sizes, generate_read
 from read import get_num_of_fragments_2_sequence
 from alignment import generate_alignment_and_write_2_SAM
+from alignment import write_SAM_header
 
 
 
@@ -40,7 +41,7 @@ def generate_SAM(read_bases, qualities, self_position, mate_postion, avg_quality
 
 #------------------------------------FASTQ and SAM generating----------------------------------------------------------------------------------------------
 def generate_fastq_files(coverage, single_read_length, average_quality, ins_size, fasta_filename, snv_rate, ins_rate, del_rate,\
-                         fastq_path="out_fastq", sam_path="out_sam"):
+                         genome_sequences_dict, fastq_path="out_fastq", sam_path="out_sam"):
     """ Function that loops through the reference genome which is presented as a dictionary {sequence_name, SeqRecord object}
         and does the sequencing process on each sequence/contig in genome separately as a result of this process pairs of reads
         are generated and written into _1.fastq and _2.fastq files. The function also generates the SAM file with aligned reads
@@ -83,7 +84,7 @@ def generate_fastq_files(coverage, single_read_length, average_quality, ins_size
     if os.path.exists(sam_file_path):
         os.remove(sam_file_path)
     sam_handle = open(sam_file_path, "w")
-
+    write_SAM_header(genome_sequences_dict, sam_handle, fasta_filename, fastq_filename_1, fastq_filename_2)
     # looping through the genome sequences and for each sequence choosing fragments positions (insert positions) to sequence into 2-paired reads
     # genome sequence dict is a dictionary (sequence name, SeqRecord object)
     # SeqRecord is a class from Biopython library and containes fields like SEQUENCE NAME, SEQUENCE ID, SEQUENCE(itself), plus additonal fields
@@ -142,7 +143,7 @@ def generate_fastq_files(coverage, single_read_length, average_quality, ins_size
     sam_handle.close()
 
     t_end = datetime.now()
-    print("Generated 2x{} Bytes of FASTQ files at {}.\nGenerated {} Bytes of SAM file at {}.".format(os.path.getsize(fastq_files[0]), out_dir_fastq_path,\
+    print("Generated 2x{} Bytes of FASTQ files at {} directory.\nGenerated {} Bytes of SAM file at {} directory.".format(os.path.getsize(fastq_files[0]), out_dir_fastq_path,\
                                                   os.path.getsize(sam_file_path), out_sam_dir_path))
 
 nucleotides = ['A', 'T', 'C', 'G']
@@ -157,21 +158,21 @@ def simulate_sequencing(args):
 
     global genome_sequences_index
     global genome_sequences_dict
-    fasta_filename = "D:/1master/1gi/projekat/GCF_000861905.1_ViralProj15445_genomic.fasta"
-    coverage = 1.43
-    average_quality = 40
-    insert_size = 150
-    paired_read_length = 50
-    snv_rate = 0.005
-    ins_rate = 0.003
-    del_rate = 0.002
+    fasta_file_path = args.fasta
+    coverage = args.coverage
+    average_quality = args.avgquality
+    insert_size = args.insertsize
+    paired_read_length = args.readlength
+    snv_rate = args.snv_rate
+    ins_rate = args.ins_rate
+    del_rate = args.del_rate
     fastq_path="D:/1master/1gi/projekat/"
     sam_path=""
     
-    genome_sequences_dict = fasta_parsing(fasta_filename) # time: 1.123226 0.956
-    fasta_filename = os.path.split(fasta_filename)[1]
+    genome_sequences_dict = fasta_parsing(fasta_file_path) # time: 1.123226 0.956
+    fasta_filename = os.path.split(fasta_file_path)[1]
     generate_fastq_files(coverage, paired_read_length, average_quality, insert_size, fasta_filename.replace(".fasta",""), snv_rate,\
-        ins_rate, del_rate, fastq_path)
+        ins_rate, del_rate, genome_sequences_dict)
 
     t_end = datetime.now()
     print("Finished sequencing in {}.".format(t_end-t_start))

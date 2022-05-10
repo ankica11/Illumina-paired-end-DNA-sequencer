@@ -1,10 +1,17 @@
+def write_SAM_header(genome_sequences_dict, sam_file_handle, fasta_filename, fastq1_filename, fastq2_filename):
+    for seq_name in genome_sequences_dict.keys():
+        header_line = "@SQ " + "SN:" + seq_name + "\n"
+        sam_file_handle.write(header_line)
+    sam_file_handle.write("@PG ID: DNA-SEQ-SIM-ANA VN: v2022 {}.fasta {} {}\n".format(fasta_filename, fastq1_filename, fastq2_filename))
+
 def generate_alignment_and_write_2_SAM(sam_file_handle, read_record, aln_pos, mate_aln_pos, mate_distance,\
                                        snv_pos, ins_pos, del_pos):
      sam_file_format = "{}\tFLAG\t{}\t{}\tMAPQ\t{}\t=\t{}\t{}\t{}\t{}\tTAG\tVTYPE\tVALUE\n"
      read_id = read_record.id
      ord_num = read_record.annotations["ord_num"]
      seq_num = read_record.annotations["seq_num"]
-     alignment_id = "DNA-SEQ-SIM-ANA" + ":" + str(seq_num) + ":" + str(ord_num)
+     #alignment_id = "DNA-SEQ-SIM-ANA" + ":" + str(seq_num) + ":" + str(ord_num)
+     alignment_id = read_id + ":" + str(ord_num)
      seq_name = read_record.name
      read = read_record.seq
      if read_record.annotations["pairity"] == 2:
