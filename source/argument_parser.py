@@ -10,7 +10,7 @@ def parse_arguments():
     parser.add_argument("--fasta", "-fa", help="Path FASTA file with reference genome", type=str)
     parser.add_argument('--avgquality', help="Average nucletiode quality", type=int, default=2)
     parser.add_argument('--coverage', help="Coverage", type=int, default=2)
-    parser.add_argument('--readlength', help="Read length", type=int, default=6)
+    parser.add_argument('--readlength', help="Read length", type=int, default=3)
     parser.add_argument('--insertsize', help="Insert size", type=int, default=6)
     parser.add_argument('--snv_rate', help="Probability snv mutation", type=float, default=0)
     parser.add_argument('--ins_rate', help="Probability insert mutation", type=float, default=0)
