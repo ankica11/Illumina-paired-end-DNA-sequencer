@@ -11,10 +11,10 @@ def parse_arguments():
     parser.add_argument('--avgquality', help="Average nucletiode quality", type=int, default=40)
     parser.add_argument('--coverage', help="Coverage", type=int, default=2)
     parser.add_argument('--readlength', help="Read length", type=int, default=150)
-    parser.add_argument('--insertsize', help="Insert size", type=int, default=350)
-    parser.add_argument('--snv_rate', help="Probability snv mutation", type=float, default=0)
-    parser.add_argument('--ins_rate', help="Probability insert mutation", type=float, default=0)
-    parser.add_argument('--del_rate', help="Probability delete mutation", type=float, default=0)
+    parser.add_argument('--insertsize', help="Insert size", type=int, default=300)
+    parser.add_argument('--snv_rate', help="Probability snv mutation", type=float, default=0.09)
+    parser.add_argument('--ins_rate', help="Probability insert mutation", type=float, default=0.009)
+    parser.add_argument('--del_rate', help="Probability delete mutation", type=float, default=0.009)
     
 
     return parser.parse_args()

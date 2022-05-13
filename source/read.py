@@ -34,11 +34,11 @@ def encode_q_score(q_score):
     qs=round(q_score)
     if qs<0:
         qs=0
-    elif qs>93:
-        qs=93
+    elif qs>40:
+        qs=40
     return chr(qs+33) #Pread+33 encoding (0, 41) scores for illumina 1.8+
 
-def generate_quality_scores(average_quality, read_length, standard_deviation=1):
+def generate_quality_scores(average_quality, read_length, standard_deviation=3):
     q_scores_distribution = np.random.normal(average_quality, standard_deviation, read_length)
     q_scores=list(map(encode_q_score, q_scores_distribution))
     return ''.join(q_scores)

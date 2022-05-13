@@ -1,3 +1,4 @@
+from cProfile import label
 import matplotlib.pyplot as plt
 import numpy as np
 import re
@@ -91,23 +92,37 @@ def get_percision_bar():
     return
 def get_recall_bar(bwa_data, bowtie_data, genome_name):
     
-    tools=["BWA MEM", "Bowtie"]
-    label_loc = np.arange(1)
+    tools = ["BWA MEM", "Bowtie"]
+   
+
     bwa_aligned_num = bwa_data[1]
-    bowtie_aligned_num = bowtie_data[1]
+    bwa_misaligned_num = bwa_data[2]
+    bwa_unmapped_num = bwa_data[3]
     bwa_total = bwa_data[1] + bwa_data[2] + bwa_data[3]
+    bowtie_aligned_num = bowtie_data[1]
+    bowtie_misaligned_num = bowtie_data[2]
+    bowtie_unmapped_num = bowtie_data[3]
     bowtie_total = bowtie_data[1] + bowtie_data[2] + bowtie_data[3]
+    bwa_mem_statistics = [round(bwa_aligned_num/bwa_total*100, 2), round(bwa_misaligned_num/bwa_total*100, 2), round(bwa_unmapped_num/bwa_total*100, 2) ]
+    bowtie_statistics = [round(bowtie_aligned_num/bwa_total*100, 2), round(bowtie_misaligned_num/bwa_total*100, 2), round(bowtie_unmapped_num/bwa_total*100, 2) ] 
+   
+    width = 0.3
+    labels = ['aligned', 'misaligned', 'unmapped']
+    label_loc = np.arange(len(labels))
     fig, ax = plt.subplots()
-    recall_aligned=[round(bwa_aligned_num/bwa_total*100, 2), round(bowtie_aligned_num/bowtie_total*100, 2)] 
-    recall_rects = ax.bar(tools, recall_aligned, width=0.5, color="orange")
-    ax.set_xlabel("Tools", fontsize=14)
-    ax.set_ylabel("Recall of aligned reads (%)", fontsize=14)
-    ax.set_title("Recall function of aligned reads, {} genome".format(genome_name), fontsize=14)
-    ax.bar_label(recall_rects, padding=3, fontsize=13, color="green")
+    bwa_mem_rects = ax.bar(label_loc - width/2, bwa_mem_statistics, width=0.2, color="green", label="BWA MEM")
+    bowtie_rects = ax.bar(label_loc + width/2, bowtie_statistics, width=0.2, color="orange", label="Bowtie")
+    ax.set_ylabel("Recall of reads (%)", fontsize=14)
+    ax.set_title("Recall of aligned, misaligned and unmapped reads for {} genome".format(genome_name), fontsize=15)
+    ax.set_xticks(label_loc)
+    ax.set_xticklabels(labels)
+    ax.bar_label(bwa_mem_rects, padding=3, fontsize=13)
+    ax.bar_label(bowtie_rects, padding=3, fontsize=13)
+    ax.legend()
     fig.tight_layout()
     plt.show()
 
-    return
+
 def get_AUC_func():
     return
 def get_fscore_func():
@@ -151,10 +166,12 @@ def compare(simulator_sam_file, tool_sam_file, factor):
 def compare_(sim_sam_path, bwa_sam_path, bowtie_sam_path, genome_name):
     bwa_data = compare(sim_sam_path, bwa_sam_path, 10)
     bowtie_data = compare(sim_sam_path, bowtie_sam_path, 7)
-    
-    get_recall_bar(bwa_data, bowtie_data, genome_name)
+
+
     # Data visualization, graphical representation
-    #get_mapq_distribution_bar(bwa_data, bowtie_data, genome_name)
+    get_mapq_distribution_bar(bwa_data, bowtie_data, genome_name)
+    get_recall_bar(bwa_data, bowtie_data, genome_name)
+    
    
     #get_percision_bar(bwa_data, bowtie_data)
     
@@ -163,9 +180,9 @@ def compare_(sim_sam_path, bwa_sam_path, bowtie_sam_path, genome_name):
 
     
 
-simulator_sam_file = "./out_sam/ls_orchid.sam"
-bwa_sam_file = "./bwa_sam/ls_orchid_bwa_mem.sam"
-bowtie_sam_file = "./bowtie_sam/ls_orchid.sam"
-genome_name="ls_orchid"
+simulator_sam_file = "./out_sam/NC_002762.1.sam"
+bwa_sam_file = "./bwa_sam/NC_002762.1_bwa_mem.sam"
+bowtie_sam_file = "./bowtie_sam/NC_002762.1_bowtie.sam"
+genome_name="NC_002762.1"
 
 compare_(simulator_sam_file, bwa_sam_file, bowtie_sam_file, genome_name)

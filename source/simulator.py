@@ -95,7 +95,7 @@ def generate_fastq_files(coverage, single_read_length, average_quality, ins_size
         #    continue
         (paired_read_length, insert_size) = calculate_sizes(single_read_length, ins_size, len(dna_seq))
         num_of_fragments = get_num_of_fragments_2_sequence(coverage, len(dna_seq), paired_read_length) # calculating number of fragments that will satisfy the required coverage (how many reads are needed to cover each base in dna sequence) 
-        
+       
         generated_read_pairs_num = 0 # how many pairs of reads are generated
 
         for i in range(num_of_fragments):
