@@ -1,4 +1,6 @@
 from cProfile import label
+from datetime import datetime
+from io import BufferedRWPair
 import matplotlib.pyplot as plt
 import numpy as np
 import re
@@ -20,6 +22,7 @@ def calculate_mapping_quality_distribution(mapq_dict, mapq, align_type, factor):
 
 
 
+
     
 def get_mapq_distribution_bar(bwa_data, bowtie_data, genome_name):
     bwa_mapq_distribution = bwa_data[0]
@@ -29,7 +32,15 @@ def get_mapq_distribution_bar(bwa_data, bowtie_data, genome_name):
     bowtie_mapq_distribution = bowtie_data[0]
     bowtie_aligned_num = bowtie_data[1]
     bowtie_misaligned_num = bowtie_data[2]
-    bowtie_unmapped_num = bowtie_data[3]     
+    bowtie_unmapped_num = bowtie_data[3] 
+    if bwa_aligned_num == 0:
+        bwa_aligned_num = 100
+    if bowtie_aligned_num == 0:
+        bowtie_aligned_num = 100
+    if bwa_misaligned_num == 0:
+        bwa_misaligned_num = 100
+    if bowtie_misaligned_num == 0:
+        bowtie_misaligned_num = 100    
     bwa_aligned = [round(num/bwa_aligned_num*100) for num in bwa_mapq_distribution['aligned'].values()]
     bwa_misaligned = [round(num/bwa_misaligned_num*100) for num in bwa_mapq_distribution['misaligned'].values()]
     bowtie_aligned= [round(num/bowtie_aligned_num*100) for num in bowtie_mapq_distribution['aligned'].values()]
@@ -88,9 +99,8 @@ def get_mapq_distribution_bar(bwa_data, bowtie_data, genome_name):
     fig.tight_layout()
     plt.show()
 
-def get_percision_bar():
-    return
-def get_recall_bar(bwa_data, bowtie_data, genome_name):
+
+def get_accuracy_histogram_single_mode(bwa_data, bowtie_data, genome_name):
     
     tools = ["BWA MEM", "Bowtie"]
    
@@ -123,11 +133,99 @@ def get_recall_bar(bwa_data, bowtie_data, genome_name):
     plt.show()
 
 
-def get_AUC_func():
-    return
-def get_fscore_func():
-    return        
-           
+
+
+def get_precision_histogram_single_mode(bwa_data, bowtie_data, genome_name):
+    bwa_true_positives = bwa_data[1]
+    bwa_false_positives = bwa_data[2]
+    
+    bowtie_true_positives = bowtie_data[1]
+    bowtie_false_positives = bowtie_data[2]
+
+    precision_statistics = [round(bwa_true_positives/(bwa_true_positives+bwa_false_positives)*100, 2),\
+                            round(bowtie_true_positives/(bowtie_true_positives+bowtie_false_positives)*100, 2)]
+    
+    width = 0.03
+    labels = ['BWA MEM', 'Bowtie']
+    fig, ax = plt.subplots()
+    precision_rects = ax.bar(labels, precision_statistics, label="precision", width=0.3)
+    ax.set_ylabel("Precision (%)", fontsize=14)
+    ax.set_title("Precision of aligners for {} genome".format(genome_name), fontsize=15)
+
+    ax.bar_label(precision_rects, padding=3, fontsize=13)
+   
+   
+    fig.tight_layout()
+    plt.show()
+
+
+
+     
+# recall = sensitivity = TP/(TP+FN)   
+def get_recall_histogram_single(bwa_data, bowtie_data, genome_name):
+    # True positives are correctly aligned reads, false negatives are unmapped reads
+    bwa_true_positives = bwa_data[1]
+    bwa_false_negatives = bwa_data[3] 
+    
+    bowtie_true_positives = bowtie_data[1]
+    bowtie_false_negatives = bowtie_data[3]
+
+    recall_statistics = [round(bwa_true_positives/(bwa_true_positives+bwa_false_negatives)*100, 2),\
+                            round(bowtie_true_positives/(bowtie_true_positives+bowtie_false_negatives)*100, 2)]
+    
+    width = 0.03
+    labels = ['BWA MEM', 'Bowtie']
+    fig, ax = plt.subplots()
+    precision_rects = ax.bar(labels, recall_statistics, label="recall", width=0.3)
+    ax.set_ylabel("Recall (%)", fontsize=14)
+    ax.set_title("Recall(sensitivity) of aligners for {} genome".format(genome_name), fontsize=15)
+
+    ax.bar_label(precision_rects, padding=3, fontsize=13)
+   
+   
+    fig.tight_layout()
+    plt.show()
+    
+
+
+
+def get_fcore_histogram_single_mode(bwa_data, bowtie_data, genome_name):
+    bwa_true_positives = bwa_data[1]
+    bwa_false_negatives = bwa_data[3] 
+    bwa_false_positives = bwa_data[2]
+
+    precision_bwa = bwa_true_positives / (bwa_true_positives + bwa_false_positives)
+    recall_bwa = bwa_true_positives / (bwa_true_positives + bwa_false_negatives)
+    fscore_bwa = 2*precision_bwa*recall_bwa/(precision_bwa + recall_bwa)
+    
+    bowtie_true_positives = bowtie_data[1]
+    bowtie_false_negatives = bowtie_data[3]
+    bowtie_false_positives = bowtie_data[2]
+
+    precision_bowtie = bowtie_true_positives / (bowtie_true_positives + bowtie_false_positives)
+    recall_bowtie = bowtie_true_positives / (bowtie_true_positives + bowtie_false_negatives)
+    fscore_bowtie = 2*precision_bowtie*recall_bowtie/(precision_bowtie + recall_bowtie)
+
+    fscore_statistics = [round(fscore_bwa, 4), round(fscore_bowtie, 4)]
+
+    width = 0.03
+    labels = ['BWA MEM', 'Bowtie']
+    fig, ax = plt.subplots()
+    precision_rects = ax.bar(labels, fscore_statistics, label="fscore", width=0.3)
+    ax.set_ylabel("F_score (%)", fontsize=14)
+    ax.set_title("F_score of aligners for {} genome".format(genome_name), fontsize=15)
+
+    ax.bar_label(precision_rects, padding=3, fontsize=13)
+   
+   
+    fig.tight_layout()
+    plt.show()
+
+    
+    
+    return 
+
+
 
 def compare(simulator_sam_file, tool_sam_file, factor):
     
@@ -163,26 +261,35 @@ def compare(simulator_sam_file, tool_sam_file, factor):
         return(mapq_distribution_dict, aligned_reads, misaligned_reads, unmapped_reads)
             
 
-def compare_(sim_sam_path, bwa_sam_path, bowtie_sam_path, genome_name):
+def compare_single(args):
+    t_start = datetime.now()
+    print("DnaSeqSimAna: Comparison of BWA MEM and Bowtie has started at {}...".format(t_start))
+
+    sim_sam_path = args.sim
+    bwa_sam_path = args.bwa_mem
+    bowtie_sam_path = args.bowtie
+    genome_name = args.gen_name
     bwa_data = compare(sim_sam_path, bwa_sam_path, 10)
     bowtie_data = compare(sim_sam_path, bowtie_sam_path, 7)
 
 
-    # Data visualization, graphical representation
+    # Data visualization, graphical representation single mode
     get_mapq_distribution_bar(bwa_data, bowtie_data, genome_name)
-    get_recall_bar(bwa_data, bowtie_data, genome_name)
-    
+    get_accuracy_histogram_single_mode(bwa_data, bowtie_data, genome_name)
+    get_precision_histogram_single_mode(bwa_data, bowtie_data, genome_name)
+    get_recall_histogram_single(bwa_data, bowtie_data, genome_name)
+    get_fcore_histogram_single_mode(bwa_data, bowtie_data, genome_name)
+
+    t_end = datetime.now()
+    print("DnaSeqSimAna: Comparison finished in {}.".format(t_end))
    
-    #get_percision_bar(bwa_data, bowtie_data)
-    
-    #get_AUC_func()
-    #get_fscore_func()
-
     
 
-simulator_sam_file = "./out_sam/NC_002762.1.sam"
-bwa_sam_file = "./bwa_sam/NC_002762.1_bwa_mem.sam"
-bowtie_sam_file = "./bowtie_sam/NC_002762.1_bowtie.sam"
-genome_name="NC_002762.1"
 
-compare_(simulator_sam_file, bwa_sam_file, bowtie_sam_file, genome_name)
+#simulator_sam_file = "./testing/Staphylococcus borealis/3/GCF_003042555.1_ASM304255v1_genomic.sam"
+#bwa_sam_file = "./testing/Staphylococcus borealis/3/GCF_003042555.1_ASM304255v1_genomic_bwa_mem.sam"
+#bowtie_sam_file = "./testing/Staphylococcus borealis/3/GCF_003042555.1_ASM304255v1_genomic_bowtie.sam"
+#genome_name="Staphylococcus borealis"
+
+#compare_single(simulator_sam_file, bwa_sam_file, bowtie_sam_file, genome_name)
+

@@ -154,28 +154,29 @@ nucleotides = ['A', 'T', 'C', 'G']
 def simulate_sequencing(args):
 
     t_start = datetime.now()
-    print("Illumina paired-end sequencing simulation has started at {}...".format(t_start))
+    print("DnaSeqSimAna: Illumina paired-end sequencing simulation has started at {}...".format(t_start))
 
     global genome_sequences_index
     global genome_sequences_dict
     fasta_file_path = args.fasta
     coverage = args.coverage
-    average_quality = args.avgquality
-    insert_size = args.insertsize
-    paired_read_length = args.readlength
+    average_quality = args.avg_quality
+    insert_size = args.insert_size
+    paired_read_length = args.read_length
     snv_rate = args.snv_rate
     ins_rate = args.ins_rate
     del_rate = args.del_rate
-    fastq_path="D:/1master/1gi/projekat/"
-    sam_path=""
+    fastq_path = args.out_fastq
+    sam_path = args.out_sam
+    
     
     genome_sequences_dict = fasta_parsing(fasta_file_path) # time: 1.123226 0.956
     fasta_filename = os.path.split(fasta_file_path)[1]
     generate_fastq_files(coverage, paired_read_length, average_quality, insert_size, fasta_filename.replace(".fasta",""), snv_rate,\
-        ins_rate, del_rate, genome_sequences_dict)
+        ins_rate, del_rate, genome_sequences_dict, fastq_path, sam_path)
 
     t_end = datetime.now()
-    print("Finished sequencing in {}.".format(t_end-t_start))
+    print("DnaSeqSimAna: Finished sequencing in {}.".format(t_end-t_start))
     
     
 #t1 = timeit.timeit(lambda: simulate(), number=1)
