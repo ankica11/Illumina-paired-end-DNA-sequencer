@@ -18,7 +18,7 @@ def fasta_parsing(fasta_filename):
     #genome_sample_file_path = os.path.join(src_dir, fasta_filename)
     genome_sample_file_path=fasta_filename
     print("FASTA parsing of file {}, size: {} Bytes has started...".format(fasta_filename, os.path.getsize(genome_sample_file_path)))
-    if os.path.getsize(genome_sample_file_path)<=SMALL_FILE_SIZE_TRESHHOLD:
+    if os.path.getsize(genome_sample_file_path) <= SMALL_FILE_SIZE_TRESHHOLD:
         with open(genome_sample_file_path) as handle:
             genome_sequences_dict = SeqIO.to_dict(SeqIO.parse(handle,"fasta")) #faster but memory dependent cant be used for large files
     else:

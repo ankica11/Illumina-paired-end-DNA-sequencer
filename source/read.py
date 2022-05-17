@@ -31,16 +31,22 @@ def encode_q_score(q_score):
         and returns its ASCII value accoriding to rule Phred+33 (ASCII representation of quality scores
         is in interval (!, ~)) 
     """
-    qs=round(q_score)
-    if qs<0:
-        qs=0
-    elif qs>40:
-        qs=40
-    return chr(qs+33) #Pread+33 encoding (0, 41) scores for illumina 1.8+
+    qs = round(q_score)
+    if qs < 0:
+        qs = 0
+    elif qs > 41:
+        qs = 41
+    return chr(qs + 33) #Pread+33 encoding (0, 41) scores for illumina 1.8+
 
 def generate_quality_scores(average_quality, read_length, standard_deviation=3):
+    if average_quality > 41:
+        average_quality = 41
+    elif average_quality < 0:
+        average_quality = 0
+
     q_scores_distribution = np.random.normal(average_quality, standard_deviation, read_length)
     q_scores=list(map(encode_q_score, q_scores_distribution))
+    
     return ''.join(q_scores)
 
 
@@ -50,21 +56,10 @@ def generate_q_score_quality_string(q_scores):
 #generate_quality_scores(40,3,40)
 #print(generate_q_score_quality_string(generate_quality_scores(40,3,40)))
 
-def generate_read(fastq_file_handle, read_seq, average_quality, seq_name, generated_read_pairs_num, pairity):
-    read_id = seq_name + ":" + str(generated_read_pairs_num)
-    readRecord = SeqRecord(read_seq, read_id, seq_name)
-    readRecord.letter_annotations["phred_quality"] = generate_quality_scores(average_quality, len(read_seq))
-    read_fastq_format = "@{}/{}\n{}\n+\n{}\n"
-    quality_scores=""
-    fastq_file_handle.write(read_fastq_format.format(read_id, pairity, read_seq, quality_scores))
-    if pairity==2:
-        return (read_id, quality_scores[::-1])
-    else:
-        return readRecord
 
 
 
-def generate_read(fastq_file_handle, readRecord):
+def generate_read(fastq_file_handle, readRecord, standard_deviation=3):
     pairity = readRecord.annotations["pairity"]
     ord_num = readRecord.annotations["ord_num"]
     seq_num = readRecord.annotations["seq_num"]
@@ -74,7 +69,7 @@ def generate_read(fastq_file_handle, readRecord):
     else:
         read_seq = readRecord.seq
     readRecord.id = read_id
-    quality_scores = generate_quality_scores(readRecord.annotations["average_quality"], len(read_seq))
+    quality_scores = generate_quality_scores(readRecord.annotations["average_quality"], len(read_seq), standard_deviation)
     readRecord.letter_annotations["phred_quality"] = quality_scores
     read_fastq_format = "@{}/{}\n{}\n+\n{}\n"
     fastq_file_handle.write(read_fastq_format.format(read_id, pairity, read_seq, quality_scores))

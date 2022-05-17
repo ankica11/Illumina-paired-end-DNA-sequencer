@@ -1,2 +1,0 @@
-def anka():
-    print("Anka")

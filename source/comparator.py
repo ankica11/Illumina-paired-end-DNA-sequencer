@@ -81,12 +81,12 @@ def get_mapq_distribution_bar(bwa_data, bowtie_data, genome_name):
     
     labels = ['0-10', '10-20', '20-30', '30-40', '40-50', '50-60'] # labels on x axis
     label_loc = np.arange(len(labels)) # positions of labels on x axis, equidistance
-    width = 0.2 # width of the bar
+    width = 0.4 # width of the bar
     fig, ax = plt.subplots() # creates figure, plot and axis
-    bwa_mem_aligned_rects = ax.bar(label_loc - width/2, bwa_aligned, width=0.1, color="green", label = "BWA MEM aligned", bottom=bottoms_bwa_aligned) # draws bars on plot
-    bwa_mem_misaligned_rects = ax.bar(label_loc - width/2, bwa_misaligned, width=0.1, color="green", label = "BWA MEM misaligned", alpha=0.3, bottom=bottoms_bwa_misaligned)
-    bowtie_aligned_rects = ax.bar(label_loc + width/2, bowtie_aligned, width=0.1, color="orange", label = "Bowtie aligned", bottom=bottoms_bowtie_aligned) # draws bars on plot
-    bowtie_misaligned_rects = ax.bar(label_loc + width/2, bowtie_misaligned, width=0.1, color="orange", label = "Bowtie misaligned", alpha=0.3, bottom=bottoms_bowtie_misaligned)
+    bwa_mem_aligned_rects = ax.bar(label_loc - width/2, bwa_aligned, width=0.3, color="green", label = "BWA MEM aligned", bottom=bottoms_bwa_aligned) # draws bars on plot
+    bwa_mem_misaligned_rects = ax.bar(label_loc - width/2, bwa_misaligned, width=0.3, color="green", label = "BWA MEM misaligned", alpha=0.3, bottom=bottoms_bwa_misaligned)
+    bowtie_aligned_rects = ax.bar(label_loc + width/2, bowtie_aligned, width=0.3, color="orange", label = "Bowtie aligned", bottom=bottoms_bowtie_aligned) # draws bars on plot
+    bowtie_misaligned_rects = ax.bar(label_loc + width/2, bowtie_misaligned, width=0.3, color="orange", label = "Bowtie misaligned", alpha=0.3, bottom=bottoms_bowtie_misaligned)
    
     ax.set_xlabel("Mapping quality", fontsize=14)
     ax.set_ylabel("Percentage of reads", fontsize=14)
@@ -122,8 +122,8 @@ def get_accuracy_histogram_single_mode(bwa_data, bowtie_data, genome_name):
     fig, ax = plt.subplots()
     bwa_mem_rects = ax.bar(label_loc - width/2, bwa_mem_statistics, width=0.2, color="green", label="BWA MEM")
     bowtie_rects = ax.bar(label_loc + width/2, bowtie_statistics, width=0.2, color="orange", label="Bowtie")
-    ax.set_ylabel("Recall of reads (%)", fontsize=14)
-    ax.set_title("Recall of aligned, misaligned and unmapped reads for {} genome".format(genome_name), fontsize=15)
+    ax.set_ylabel("Accuracy (%)", fontsize=14)
+    ax.set_title("Percentage of aligned, misaligned and unmapped reads for {} genome".format(genome_name), fontsize=15)
     ax.set_xticks(label_loc)
     ax.set_xticklabels(labels)
     ax.bar_label(bwa_mem_rects, padding=3, fontsize=13)
