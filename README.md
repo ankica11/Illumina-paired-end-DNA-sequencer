@@ -37,6 +37,7 @@ Both Bowtie SAM file and BWA MEM SAM file are first compared with simulator's SA
 --ins_rate 0.009 --del_rate 0.009 --out_sam <i>"D:/dir/for/SAM/files"</i> --out_fastq <i>"D:/dir/for/FASTQ/files"</i> </br>
 
 <b>Arguments:</b> </br>
+__--mode__ - choosing mode, if mode == sim, then sequencing simulation is started </br>
 <b>--fasta </b> - path to FASTA file with reference genome (.fasta, .fa) </br>
 <b>--insert_size </b> - size of a fragment to be sequenced, can't be smaller than read length </br>
 <b>--read_length</b> - length of a single read in pair <br/>
@@ -52,6 +53,7 @@ Both Bowtie SAM file and BWA MEM SAM file are first compared with simulator's SA
 <b>Example of usage:</b> --mode compare --sim <i>"D:/path/to/simulator/SAM/file"</i> --bwa_mem <i>"D:/path/to/bwa mem/SAM/file"</i> --bowtie <i>"D:/path/to/bowtie/SAM/file"</i> --gen_name <i>"Mycobacterium tuberculosis"</i> </br>
 
 <b>Arguments:</b> </br>
+__--mode__ - choosing mode, if mode == compare then comparison is started
 <b>--sim</b> - path to SAM file that simulator generated </br>
 <b>--bwa_mem</b> - path to SAM file that BWA MEM aligner generated </br>
 <b>--bowtie</b> - path to SAM file that Bowtie2 aligner generated </br>
