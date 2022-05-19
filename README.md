@@ -1,4 +1,4 @@
-# Illumina-paired-end-DNA-sequencer
+# Illumina paired-end DNA sequencer simulator
 A Python program that simulates DNA sequencing of paired-end Illumina reads and their aligning to the reference genome. It's useful for comparison of different aligners like BWA-MEM or Bowtie. </br>
 
 ### Illumina paired-end sequencing 
