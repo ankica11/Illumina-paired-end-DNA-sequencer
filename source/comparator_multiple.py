@@ -3,6 +3,10 @@ from tkinter import font
 import matplotlib.pyplot as plt
 import numpy as np
 from comparator import compare
+import pandas as pd
+
+from statistics import get_statistics
+
 
 
 def get_accuracy_histogram(bwa_data, bowtie_data, genome_name):
@@ -54,7 +58,7 @@ def get_accuracy_histogram(bwa_data, bowtie_data, genome_name):
     ax.legend()
     fig.tight_layout()
     plt.show()
-
+    return (bwa_mem_aligned, bwa_mem_misaligned, bwa_mem_unmapped, bowtie_aligned, bowtie_misaligned, bowtie_unmapped)
 
 def get_precision_histogram(bwa_data, bowtie_data, genome_name):
     
@@ -84,6 +88,7 @@ def get_precision_histogram(bwa_data, bowtie_data, genome_name):
     ax.legend()
     fig.tight_layout()
     plt.show()
+    return bwa_mem_precision, bowtie_precision
 
 
 
@@ -114,7 +119,7 @@ def get_recall_histogram(bwa_data, bowtie_data, genome_name):
     ax.legend()
     fig.tight_layout()
     plt.show()
-    
+    return bwa_mem_recall, bowtie_recall
 
 
 def get_fcore_histogram(bwa_data, bowtie_data, genome_name):
@@ -151,27 +156,38 @@ def get_fcore_histogram(bwa_data, bowtie_data, genome_name):
     ax.legend()
     fig.tight_layout()
     plt.show()
+    return bwa_mem_fscore, bowtie_fscore
     
          
 
 def compare_multiple():
-    genome_name="Clostridium tetani"
-    sim_sam_paths=["./testing2/Clostridium/4/0Clostridium_tetani.sam", "./testing2/Clostridium/4/1Clostridium_tetani.sam", "./testing2/Clostridium/4/2Clostridium_tetani.sam", "./testing2/Clostridium/4/3Clostridium_tetani.sam", "./testing2/Clostridium/4/4Clostridium_tetani.sam"] 
-    bwa_sam_paths=["./testing2/Clostridium/4/0Clostridium_tetani_bwa_mem.sam", "./testing2/Clostridium/4/1Clostridium_tetani_bwa_mem.sam", "./testing2/Clostridium/4/2Clostridium_tetani_bwa_mem.sam", "./testing2/Clostridium/4/3Clostridium_tetani_bwa_mem.sam", "./testing2/Clostridium/4/4Clostridium_tetani_bwa_mem.sam"]
-    bowtie_sam_paths=["./testing2/Clostridium/4/0Clostridium_tetani_bwa_mem.sam", "./testing2/Clostridium/4/1Clostridium_tetani_bowtie.sam", "./testing2/Clostridium/4/2Clostridium_tetani_bowtie.sam", "./testing2/Clostridium/4/3Clostridium_tetani_bowtie.sam", "./testing2/Clostridium/4/4Clostridium_tetani_bowtie.sam"]
+    directory_path = "./testing2/Tuberculosis/"
+    filename = "Mycobacterium_tuberculosis"
+    genome_name = "Mycobacterium tuberculosis"
+    sim_sam_paths = [directory_path+str(i)+filename+".sam" for i in range(5)]
+    bwa_sam_paths = [directory_path+str(i)+filename+"_bwa_mem.sam" for i in range(5)]
+    bowtie_sam_paths = [directory_path+str(i)+filename+"_bowtie.sam" for i in range(5)]
     bwa_data = []
     bowtie_data = []  
 
     for i in range(5):
         bwa_data.append(compare(sim_sam_paths[i], bwa_sam_paths[i], 10))
         bowtie_data.append(compare(sim_sam_paths[i], bowtie_sam_paths[i], 7))
+
+ 
    
-    get_accuracy_histogram(bwa_data, bowtie_data, genome_name)
-    get_precision_histogram(bwa_data, bowtie_data, genome_name)
-    get_recall_histogram(bwa_data, bowtie_data, genome_name)
-    get_fcore_histogram(bwa_data, bowtie_data, genome_name)
+    bw_aln, bw_mis, bw_un, bow_aln, bow_mis, bow_un = get_accuracy_histogram(bwa_data, bowtie_data, genome_name)
+    bw_pre, bow_pre = get_precision_histogram(bwa_data, bowtie_data, genome_name)
+    bw_rec, bow_rec = get_recall_histogram(bwa_data, bowtie_data, genome_name)
+    bw_fs, bow_fs = get_fcore_histogram(bwa_data, bowtie_data, genome_name)
+
+    path = "./testing2/Tuberculosis/Tuberculosis.html"
+    get_statistics(bw_aln, bow_aln, bw_mis, bow_mis, bw_un, bow_un, bw_pre, bow_pre, bw_rec, bow_rec, bw_fs, bow_fs, path)
+
 
 
 compare_multiple()
+
+
 
 

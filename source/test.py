@@ -14,6 +14,9 @@ from read import generate_read
 from alignment import generate_cigar_string
 from alignment import generate_alignment_and_write_2_SAM
 from sequencing_errors import simulate_sequencing_errors
+from comparator import compare
+
+# Testing simulator's functionalities
 
 # fasta.py tests
 
@@ -172,6 +175,32 @@ def simulate_sequencing_errors_test():
         exit(1) 
 
 
+# comparator.py tests
+def compare_test():
+    try:
+        sim_path = "./out_sam/test_sim.sam"
+        tool_path = "./out_sam/test_tool.sam"
+        mapq_dict, aln_num, mis_num, unmapped_num = compare(sim_path, tool_path, 10)
+        assert aln_num == 9
+        assert mis_num == 6
+        assert unmapped_num == 3
+        assert mapq_dict['aligned']['40-50'] == 1
+        assert mapq_dict['aligned']['50-60'] == 8
+        assert mapq_dict['misaligned']['10-20'] == 6
+        assert sum(mapq_dict["aligned"].values()) == aln_num
+        assert sum(mapq_dict["misaligned"].values()) == mis_num
+        print('-------Assertion test for function "compare" successfully finished!-------')
+    except AssertionError:
+        type, value, tb = sys.exc_info()
+        tb_info = traceback.extract_tb(tb)
+        filename, line, func, text = tb_info[-1]
+
+        print('Err: Assertion test failed for function "{}" in {}\nLine: {}, statement: {}.'.format(func, filename, line, text))
+        exit(1)  
+
+
+
+
 def start_tests():
     print("DNASeqSimAna testing mode has started...")
     print("Testing fasta.py module...")
@@ -184,6 +213,8 @@ def start_tests():
     generate_alignement_and_write_2_SAM_test()
     print("Testing sequencing_errors.py module...")
     simulate_sequencing_errors_test()
+    print("Testing comparator.py module...")
+    compare_test()
     print("Finished testing!")
 
 

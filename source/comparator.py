@@ -228,6 +228,22 @@ def get_fcore_histogram_single_mode(bwa_data, bowtie_data, genome_name):
 
 
 def compare(simulator_sam_file, tool_sam_file, factor):
+    """ Takes file paths of simulator SAM file and tool SAM file as arguments,
+        calculates mapping quality distribution of correctly aligned and misaligned reads,
+        number of correctly aligned, misaligned and unmapped reads. Mapping qualities are
+        divided into 6 categories: 0-10, 10-20, 20-30, 30-40, 40-50, 50-60; since BWA MEM mapq 
+        range is [0,60] and Bowtie mapq range is [0, 42] so Bowtie mapq values are linearized 
+        in order to fit the BWA MEM mapping quality scale. Read is considered as correctly aligned
+        only if its mapping position in tool's SAM file is equal to its position in simulator's SAM file.
+        If that's not the case and read is not unmapped, then read is considered as misaligned.
+        Alignments with 0x0004 flag set are unmapped.
+        In terms of classification correctly aligned reads are considered as TRUE POSITIVES as both simulator and
+        tool have mapped them the same way. Wrongly mapped reads or misaligned reads are considered as FALSE POSITIVES because 
+        tool has indeed mapped them but not at the right position (like simulator) and they can later lead to false positives variant calls.
+        Unmapped reads are FALSE NEGATIVES since tool hasn't aligned them at all, nor correctly nor wrongly. Unmapped 
+        reads are not as critical as misaligned since they are easily filtered out and don't bring confusion in later stages of
+        DNA analysis.
+    """
     
     unmapped_reads = 0
     misaligned_reads = 0

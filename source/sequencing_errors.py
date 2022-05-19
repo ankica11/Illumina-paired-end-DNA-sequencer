@@ -2,15 +2,6 @@ import numpy as np
 
 nucleotides = ['A', 'T', 'C', 'G']
 
-def simulate_snv(read, snv_rate):
-    return
-
-def simulate_insertion(read, insertion_rate):
-    return
-
-def simulate_deletion(read, deletion_rate, additional_nucleotide):
-   
-    return
 
 
 def simulate_sequencing_errors(read, snv_rate, insertion_rate, deletion_rate, end_position, ref_sequence_name, genome):
@@ -53,10 +44,11 @@ def simulate_sequencing_errors(read, snv_rate, insertion_rate, deletion_rate, en
                                                                                       
         elif np.random.random() <= deletion_rate:                                     # decreasses read length so its needed to add new additional
             deleted_nucleotide=read[err_pos]
-            del_positions.append(err_pos)                                             # base at the end of read to preserve read length the new base is taken from
+                                                                                      # base at the end of read to preserve read length the new base is taken from
                                                                                       # reference sequence or if there is no bases left in sequence the new base is 
                                                                                       # chosen randomly                                      
             next_position_ref_seq = end_position + del_num - ins_num
+            del_positions.append(err_pos) 
             if next_position_ref_seq < len(ref_sequence):
                 additional_nucleotide = ref_sequence[next_position_ref_seq]
                

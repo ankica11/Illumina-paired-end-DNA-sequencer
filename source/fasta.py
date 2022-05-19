@@ -5,17 +5,14 @@ import timeit
 
 
 
-SMALL_FILE_SIZE_TRESHHOLD = 80*2**20  # files smaller that 3MB are considered small
+SMALL_FILE_SIZE_TRESHHOLD = 10*2**20  # files smaller that 10MB are considered small
 
 
 #---------------------------------------parsiranje ulaznog FASTA fajla-------------------------------------------------------------------
 def fasta_parsing(fasta_filename):
 
     t_start=datetime.now()
-    #src_dir="./genomes" #directory for genome samples
-    #if not os.path.exists(src_dir):
-    #    os.system('mkdir ' + src_dir)
-    #genome_sample_file_path = os.path.join(src_dir, fasta_filename)
+    
     genome_sample_file_path=fasta_filename
     print("FASTA parsing of file {}, size: {} Bytes has started...".format(fasta_filename, os.path.getsize(genome_sample_file_path)))
     if os.path.getsize(genome_sample_file_path) <= SMALL_FILE_SIZE_TRESHHOLD:

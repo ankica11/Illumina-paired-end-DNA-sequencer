@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 from simulator import simulate_sequencing
 
-#dokle bre vise alo 
+
 def parse_arguments():
 
     parser = ArgumentParser(prog="dnaSeqSimAna", description="Illumina pair end DNA sequencing simulator and comparator")

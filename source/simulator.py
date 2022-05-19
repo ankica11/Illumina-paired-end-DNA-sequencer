@@ -27,17 +27,6 @@ def multi2single_sequence_fasta():
         fasta_single.write(str(seq.seq))
 
 
-def simulate_errors(snp_err_rate, insertion_err_rate, deletion_err_rate, sequence):
-    #add errors in sequence to simulate sequencing errors of real dna sequencers
-    #shall we simulate errors on sequence or read???
-    print()
-
-
-
-def generate_SAM(read_bases, qualities, self_position, mate_postion, avg_quality, name, filename):
-    print()
-
-
 
 #------------------------------------FASTQ and SAM generating----------------------------------------------------------------------------------------------
 def generate_fastq_files(coverage, single_read_length, average_quality, ins_size, fasta_filename, snv_rate, ins_rate, del_rate,\
