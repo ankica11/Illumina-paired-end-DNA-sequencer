@@ -9,7 +9,7 @@ A Python program that simulates DNA sequencing of paired-end Illumina reads and 
 <b>Arguments:</b> </br>
 <b>--fasta </b> - path to FASTA file with reference genome (.fasta, .fa) </br>
 <b>--insert_size </b> - size of a fragment to be sequenced, can't be smaller than read length </br>
-<b>--read_length<?b> - length of a single read in pair <br/>
+<b>--read_length</b> - length of a single read in pair <br/>
 <b>--coverage</b> - number of mapped reads to cover single nucleotide in genome, the bigger to more accurate variant calling </br>
 <b>--avg_quality</b> - average quality of nucleotides (bases) of reads in FASTQ files </br>
 <b>--snv_rate</b> - single nucleotide variation rate </br>
