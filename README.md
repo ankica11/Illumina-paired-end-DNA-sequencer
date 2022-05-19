@@ -7,7 +7,7 @@ Example of usage: ./source/dna_seq_sim_ana.py --mode sim --fasta "C:/Users/user/
 --ins_rate 0.009 --del_rate 0.009 --out_sam "D:/dir/for/SAM/files" --out_fastq "D:/dir/for/FASTQ/files" </br>
 
 Arguments: </br>
---fasta - path to FASTA file with reference genome (.fasta, .fa) </br>
+<b>--fasta </b> - path to FASTA file with reference genome (.fasta, .fa) </br>
 --insert_size - size of a fragment to be sequenced, can't be smaller than read length </br>
 --read_length - length of a single read in pair <br/>
 --coverage - number of mapped reads to cover single nucleotide in genome, the bigger to more accurate variant calling </br>
