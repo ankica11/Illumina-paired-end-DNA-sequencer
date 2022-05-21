@@ -33,18 +33,18 @@ def get_accuracy_histogram(bwa_data, bowtie_data, genome_name):
     bowtie_unmapped = [round(item[3]/total*100, 2) for item in bowtie_data]
 
     
-    width = 0.15
-    labels = ['set 1', 'set 2', 'set 3', 'set 4', 'set 5']
+    width = 0.13
+    labels = ['Set 1', 'Set 2', 'Set 3', 'Set 4', 'Set 5']
     label_loc = np.arange(len(labels))
     fig, ax = plt.subplots()
-    bwa_mem_aligned_rects = ax.bar(label_loc - 3*width, bwa_mem_aligned, width=0.1, color="green", label="BWA MEM aligned")
-    bowtie_aligned_rects = ax.bar(label_loc - 2*width, bowtie_aligned, width=0.1, color="orange", label="Bowtie aligned")
+    bwa_mem_aligned_rects = ax.bar(label_loc - 3*width, bwa_mem_aligned, width=0.1, color="#F24BC0", label="BWA MEM aligned")
+    bowtie_aligned_rects = ax.bar(label_loc - 2*width, bowtie_aligned, width=0.1, color="#3666AC", label="Bowtie aligned")
    
-    bwa_mem_misaligned_rects = ax.bar(label_loc - width, bwa_mem_misaligned, width=0.1, color="green", label="BWA MEM misaligned", alpha=0.6)
-    bowtie_misaligned_rects = ax.bar(label_loc, bowtie_misaligned, width=0.1, color="orange", label="Bowtie misaligned", alpha=0.6)
+    bwa_mem_misaligned_rects = ax.bar(label_loc - width, bwa_mem_misaligned, width=0.1, color="#F24BC0", label="BWA MEM misaligned", alpha=0.6)
+    bowtie_misaligned_rects = ax.bar(label_loc, bowtie_misaligned, width=0.1, color="#3666AC", label="Bowtie misaligned", alpha=0.6)
   
-    bwa_mem_unmapped_rects = ax.bar(label_loc + width, bwa_mem_unmapped, width=0.1, color="green", label="BWA MEM unmapped", alpha=0.2)
-    bowtie_unmapped_rects = ax.bar(label_loc + 2*width, bowtie_unmapped, width=0.1, color="orange", label="Bowtie unmapped", alpha=0.2)
+    bwa_mem_unmapped_rects = ax.bar(label_loc + width, bwa_mem_unmapped, width=0.1, color="#F24BC0", label="BWA MEM unmapped", alpha=0.2)
+    bowtie_unmapped_rects = ax.bar(label_loc + 2*width, bowtie_unmapped, width=0.1, color="#3666AC", label="Bowtie unmapped", alpha=0.2)
     ax.set_ylabel("Accuracy (%)", fontsize=14)
     ax.set_title("Percentage of aligned, misaligned and unmapped reads for {} genome".format(genome_name), fontsize=15)
     ax.set_xticks(label_loc)
@@ -73,11 +73,11 @@ def get_precision_histogram(bwa_data, bowtie_data, genome_name):
     bowtie_precision = [round(true_positive/(true_positive + false_positive)*100, 2) for true_positive, false_positive in zip(true_positives_bowtie, false_positives_bowtie)]
   
     width = 0.15
-    labels = ['set 1', 'set 2', 'set 3', 'set 4', 'set 5']
+    labels = ['Set 1', 'Set 2', 'Set 3', 'Set 4', 'Set 5']
     label_loc = np.arange(len(labels))
     fig, ax = plt.subplots()
-    bwa_mem_precision_rects = ax.bar(label_loc - width, bwa_mem_precision, width=0.2, color="green", label="BWA MEM")
-    bowtie_precision_rects = ax.bar(label_loc + width, bowtie_precision, width=0.2, color="orange", label="Bowtie")
+    bwa_mem_precision_rects = ax.bar(label_loc - width, bwa_mem_precision, width=0.2, color="#F24BC0", label="BWA MEM")
+    bowtie_precision_rects = ax.bar(label_loc + width, bowtie_precision, width=0.2, color="#3666AC", label="Bowtie")
    
     ax.set_ylabel("Precision (%)", fontsize=14)
     ax.set_title("Precision of aligners for {} genome".format(genome_name), fontsize=15)
@@ -104,11 +104,11 @@ def get_recall_histogram(bwa_data, bowtie_data, genome_name):
    
     
     width = 0.15
-    labels = ['set 1', 'set 2', 'set 3', 'set 4', 'set 5']
+    labels = ['Set 1', 'Set 2', 'Set 3', 'Set 4', 'Set 5']
     label_loc = np.arange(len(labels))
     fig, ax = plt.subplots()
-    bwa_mem_recall_rects = ax.bar(label_loc - width, bwa_mem_recall, width=0.2, color="green", label="BWA MEM")
-    bowtie_recall_rects = ax.bar(label_loc + width, bowtie_recall, width=0.2, color="orange", label="Bowtie")
+    bwa_mem_recall_rects = ax.bar(label_loc - width, bwa_mem_recall, width=0.2, color="#F24BC0", label="BWA MEM")
+    bowtie_recall_rects = ax.bar(label_loc + width, bowtie_recall, width=0.2, color="#3666AC", label="Bowtie")
    
     ax.set_ylabel("Recall (%)", fontsize=14)
     ax.set_title("Recall (sensitivity) of aligners for {} genome".format(genome_name), fontsize=15)
@@ -141,11 +141,11 @@ def get_fcore_histogram(bwa_data, bowtie_data, genome_name):
     
     
     width = 0.15
-    labels = ['set 1', 'set 2', 'set 3', 'set 4', 'set 5']
+    labels = ['Set 1', 'Set 2', 'Set 3', 'Set 4', 'Set 5']
     label_loc = np.arange(len(labels))
     fig, ax = plt.subplots()
-    bwa_mem_fscore_rects = ax.bar(label_loc - width, bwa_mem_fscore, width=0.2, color="green", label="BWA MEM")
-    bowtie_fscore_rects = ax.bar(label_loc + width, bowtie_fscore, width=0.2, color="orange", label="Bowtie")
+    bwa_mem_fscore_rects = ax.bar(label_loc - width, bwa_mem_fscore, width=0.2, color="#F24BC0", label="BWA MEM")
+    bowtie_fscore_rects = ax.bar(label_loc + width, bowtie_fscore, width=0.2, color="#3666AC", label="Bowtie")
    
     ax.set_ylabel("F_score (%)", fontsize=14)
     ax.set_title("F_score of aligners for {} genome".format(genome_name), fontsize=15)
@@ -161,9 +161,9 @@ def get_fcore_histogram(bwa_data, bowtie_data, genome_name):
          
 
 def compare_multiple():
-    directory_path = "./testing2/Tuberculosis/"
-    filename = "Mycobacterium_tuberculosis"
-    genome_name = "Mycobacterium tuberculosis"
+    directory_path = "./testing2/Clostridium/"
+    filename = "Clostridium_tetani"
+    genome_name = "Clostridium tetani"
     sim_sam_paths = [directory_path+str(i)+filename+".sam" for i in range(5)]
     bwa_sam_paths = [directory_path+str(i)+filename+"_bwa_mem.sam" for i in range(5)]
     bowtie_sam_paths = [directory_path+str(i)+filename+"_bowtie.sam" for i in range(5)]
@@ -181,7 +181,7 @@ def compare_multiple():
     bw_rec, bow_rec = get_recall_histogram(bwa_data, bowtie_data, genome_name)
     bw_fs, bow_fs = get_fcore_histogram(bwa_data, bowtie_data, genome_name)
 
-    path = "./testing2/Tuberculosis/Tuberculosis.html"
+    path = "./testing2/Clostridium/Clostridium_tetani.csv"
     get_statistics(bw_aln, bow_aln, bw_mis, bow_mis, bw_un, bow_un, bw_pre, bow_pre, bw_rec, bow_rec, bw_fs, bow_fs, path)
 
 

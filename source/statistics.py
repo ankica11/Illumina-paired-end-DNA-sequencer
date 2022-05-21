@@ -18,18 +18,20 @@ def get_statistics(bw_aln, bow_aln, bw_mis, bow_mis, bw_un, bow_un, bw_pre, bow_
     style_df = stat_df.style.set_table_styles([
                             {
                                 "selector":"thead",
-                                "props":"background-color:dodgerblue; color:white; border:3px;"
+                                "props":"background-color:#F24BC0; color:white; border:3px;"
                             },
                             {
                                 "selector":"th.row_heading",
-                                "props":"background-color : dodgerblue; color:white; border:3px; text-align: left"}, 
+                                "props":"background-color : #F24BC0; color:white; border:3px; text-align: left"}, 
                             {   "selector": "td", 
                                 "props": "text-align:center; background-color: #F2F2F2"
                             },
                             
                             ])
     style_df.format(precision = 2)
-    style_df.to_html(path)
+    #style_df.to_html(path)
+    stat_df.to_csv(path)
+    
     
 
 
@@ -40,11 +42,11 @@ def set_errors_table():
     style_df = sets_df.style.set_table_styles([
                             {
                                 "selector":"thead",
-                                "props":"background-color:dodgerblue; color:white; border:3px;"
+                                "props":"background-color:#F24BC0; color:white; border:3px;"
                             },
                             {
                                 "selector":"th.row_heading",
-                                "props":"background-color : dodgerblue; color:white; border:3px; text-align: left"}, 
+                                "props":"background-color : #F24BC0; color:white; border:3px; text-align: left"}, 
                             {   "selector": "td", 
                                 "props": "text-align:center; background-color: #F2F2F2"
                             },
@@ -60,11 +62,11 @@ def genomes_info_table():
      style_df = gen_df.style.set_table_styles([
                             {
                                 "selector":"thead",
-                                "props":"background-color:dodgerblue; color:white; border:3px; font-style:italic;"
+                                "props":"background-color:#F24BC0; color:white; border:3px; font-style:italic;"
                             },
                             {
                                 "selector":"th.row_heading",
-                                "props":"background-color : dodgerblue; color:white; border:3px; text-align: left"}, 
+                                "props":"background-color : #F24BC0; color:white; border:3px; text-align: left"}, 
                             {   "selector": "td", 
                                 "props": "text-align:center; background-color: #F2F2F2"
                             },
