@@ -4,12 +4,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from comparator import compare
 import pandas as pd
+import os
 
 from statistics import get_statistics
 
 
 
-def get_accuracy_histogram(bwa_data, bowtie_data, genome_name):
+def get_accuracy_histogram(bwa_data, bowtie_data, genome_name, number_of_sets):
 
     #bwa_data = [(0,1,2,3), (0,1,2,3), (0,1,2,3), (0,1,2,3), (0,1,2,3)]
     
@@ -34,7 +35,7 @@ def get_accuracy_histogram(bwa_data, bowtie_data, genome_name):
 
     
     width = 0.13
-    labels = ['Set 1', 'Set 2', 'Set 3', 'Set 4', 'Set 5']
+    labels = ['Set ' + str(i+1) for i in range(number_of_sets)]
     label_loc = np.arange(len(labels))
     fig, ax = plt.subplots()
     bwa_mem_aligned_rects = ax.bar(label_loc - 3*width, bwa_mem_aligned, width=0.1, color="#F24BC0", label="BWA MEM aligned")
@@ -60,7 +61,7 @@ def get_accuracy_histogram(bwa_data, bowtie_data, genome_name):
     plt.show()
     return (bwa_mem_aligned, bwa_mem_misaligned, bwa_mem_unmapped, bowtie_aligned, bowtie_misaligned, bowtie_unmapped)
 
-def get_precision_histogram(bwa_data, bowtie_data, genome_name):
+def get_precision_histogram(bwa_data, bowtie_data, genome_name, number_of_sets):
     
 
     true_positives_bwa_mem = [item[1] for item in bwa_data]
@@ -73,7 +74,7 @@ def get_precision_histogram(bwa_data, bowtie_data, genome_name):
     bowtie_precision = [round(true_positive/(true_positive + false_positive)*100, 2) for true_positive, false_positive in zip(true_positives_bowtie, false_positives_bowtie)]
   
     width = 0.15
-    labels = ['Set 1', 'Set 2', 'Set 3', 'Set 4', 'Set 5']
+    labels = ['Set ' + str(i+1) for i in range(number_of_sets)]
     label_loc = np.arange(len(labels))
     fig, ax = plt.subplots()
     bwa_mem_precision_rects = ax.bar(label_loc - width, bwa_mem_precision, width=0.2, color="#F24BC0", label="BWA MEM")
@@ -92,7 +93,7 @@ def get_precision_histogram(bwa_data, bowtie_data, genome_name):
 
 
 
-def get_recall_histogram(bwa_data, bowtie_data, genome_name):
+def get_recall_histogram(bwa_data, bowtie_data, genome_name, number_of_sets):
     true_positives_bwa_mem = [item[1] for item in bwa_data]
     true_positives_bowtie = [item[1] for item in bowtie_data]
     false_negatives_bwa_mem = [item[3] for item in bwa_data]
@@ -104,7 +105,7 @@ def get_recall_histogram(bwa_data, bowtie_data, genome_name):
    
     
     width = 0.15
-    labels = ['Set 1', 'Set 2', 'Set 3', 'Set 4', 'Set 5']
+    labels = ['Set ' + str(i+1) for i in range(number_of_sets)]
     label_loc = np.arange(len(labels))
     fig, ax = plt.subplots()
     bwa_mem_recall_rects = ax.bar(label_loc - width, bwa_mem_recall, width=0.2, color="#F24BC0", label="BWA MEM")
@@ -122,7 +123,7 @@ def get_recall_histogram(bwa_data, bowtie_data, genome_name):
     return bwa_mem_recall, bowtie_recall
 
 
-def get_fcore_histogram(bwa_data, bowtie_data, genome_name):
+def get_fcore_histogram(bwa_data, bowtie_data, genome_name, number_of_sets):
     true_positives_bwa_mem = [item[1] for item in bwa_data]
     true_positives_bowtie = [item[1] for item in bowtie_data]
     false_negatives_bwa_mem = [item[3] for item in bwa_data]
@@ -141,7 +142,7 @@ def get_fcore_histogram(bwa_data, bowtie_data, genome_name):
     
     
     width = 0.15
-    labels = ['Set 1', 'Set 2', 'Set 3', 'Set 4', 'Set 5']
+    labels = ['Set ' + str(i+1) for i in range(number_of_sets)]
     label_loc = np.arange(len(labels))
     fig, ax = plt.subplots()
     bwa_mem_fscore_rects = ax.bar(label_loc - width, bwa_mem_fscore, width=0.2, color="#F24BC0", label="BWA MEM")
@@ -160,33 +161,43 @@ def get_fcore_histogram(bwa_data, bowtie_data, genome_name):
     
          
 
-def compare_multiple():
-    directory_path = "./testing2/Clostridium/"
-    filename = "Clostridium_tetani"
-    genome_name = "Clostridium tetani"
-    sim_sam_paths = [directory_path+str(i)+filename+".sam" for i in range(5)]
-    bwa_sam_paths = [directory_path+str(i)+filename+"_bwa_mem.sam" for i in range(5)]
-    bowtie_sam_paths = [directory_path+str(i)+filename+"_bowtie.sam" for i in range(5)]
-    bwa_data = []
-    bowtie_data = []  
-
-    for i in range(5):
-        bwa_data.append(compare(sim_sam_paths[i], bwa_sam_paths[i], 10))
-        bowtie_data.append(compare(sim_sam_paths[i], bowtie_sam_paths[i], 7))
-
- 
+def compare_multiple(paths, number_of_sets):
+    # paths list and number of sets can be simulator arguments
+    #paths = ["./testing2/Herpesvirus/Human_herpesvirus",\
+    #        "./testing2/Clostridium/Clostridium_tetani",\
+    #         "./testing2/Tuberculosis/Mycobacterium_tuberculosis" ]
+    
+    #number_of_sets = 5  
    
-    bw_aln, bw_mis, bw_un, bow_aln, bow_mis, bow_un = get_accuracy_histogram(bwa_data, bowtie_data, genome_name)
-    bw_pre, bow_pre = get_precision_histogram(bwa_data, bowtie_data, genome_name)
-    bw_rec, bow_rec = get_recall_histogram(bwa_data, bowtie_data, genome_name)
-    bw_fs, bow_fs = get_fcore_histogram(bwa_data, bowtie_data, genome_name)
+    for path in paths:
+        
+        directory = os.path.dirname(path)+"/"
+        filename = os.path.basename(path)
+        genome_name = ' '.join(filename.split('_'))
+        print('Comparison of BWA MEM and Bowtie for genome: "{}" has started...'.format(genome_name))
+        sim_sam_paths = [directory+str(i)+filename+".sam" for i in range(number_of_sets)]
+        bwa_sam_paths = [directory+str(i)+filename+"_bwa_mem.sam" for i in range(number_of_sets)]
+        bowtie_sam_paths = [directory+str(i)+filename+"_bowtie.sam" for i in range(number_of_sets)]
+        bwa_data = []
+        bowtie_data = []  
 
-    path = "./testing2/Clostridium/Clostridium_tetani.csv"
-    get_statistics(bw_aln, bow_aln, bw_mis, bow_mis, bw_un, bow_un, bw_pre, bow_pre, bw_rec, bow_rec, bw_fs, bow_fs, path)
+        for i in range(number_of_sets):
+            bwa_data.append(compare(sim_sam_paths[i], bwa_sam_paths[i], 10))
+            bowtie_data.append(compare(sim_sam_paths[i], bowtie_sam_paths[i], 7))
+
+        
+    
+        bw_aln, bw_mis, bw_un, bow_aln, bow_mis, bow_un = get_accuracy_histogram(bwa_data, bowtie_data, genome_name, number_of_sets)
+        bw_pre, bow_pre = get_precision_histogram(bwa_data, bowtie_data, genome_name, number_of_sets)
+        bw_rec, bow_rec = get_recall_histogram(bwa_data, bowtie_data, genome_name, number_of_sets)
+        bw_fs, bow_fs = get_fcore_histogram(bwa_data, bowtie_data, genome_name, number_of_sets)
+
+        cvs_file = path + str('.csv') 
+        get_statistics(bw_aln, bow_aln, bw_mis, bow_mis, bw_un, bow_un, bw_pre, bow_pre, bw_rec, bow_rec, bw_fs, bow_fs, cvs_file, number_of_sets)
+        print("Comparison finished! {} file is created.".format(cvs_file))
 
 
-
-compare_multiple()
+#compare_multiple()
 
 
 

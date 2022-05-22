@@ -58,3 +58,12 @@ __--mode__ - choosing mode, if mode == compare then comparison is started
 <b>--bwa_mem</b> - path to SAM file that BWA MEM aligner generated </br>
 <b>--bowtie</b> - path to SAM file that Bowtie2 aligner generated </br>
 <b>--gen_name</b> - name of reference genome
+
+## Multiple comparison mode
+<b>Example of usage:</b> --mode multi --sam_list <i>path/to/sam/files/genome1 path/to/sam/files/genome2 path/to/sam/files/genome3</i></br>
+
+<b>Arguments:</b> </br>
+__--mode__ - choosing mode, if mode == multi then multiple comparison is started</br>
+__--sam_list__ - list of paths to tested genome's SAM files</br>
+__--num_of_sets__ - number of sets</br>
+

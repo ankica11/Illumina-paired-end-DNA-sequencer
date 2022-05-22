@@ -1,5 +1,6 @@
 import sys
 import traceback
+import os
 
 import Bio
 from Bio.SeqRecord import SeqRecord
@@ -21,14 +22,16 @@ from comparator import compare
 # fasta.py tests
 
 def fasta_parsing_test():
-    test_genome = "./genomes/sample.fasta"
+    test_genome =  "./genomes/sample.fasta"
+    
+    
 
     genome_dict = fasta_parsing(test_genome)
     genome_dict_test = {'NC_001612.1' : 'ATTAAACAGCCTGTGGGTTGTACCCACCCACAGGGCCCACTGGGCGCTAGCACTCTGATTCTACGGAATCCTTGTGCGCCATTACGAATGCTATCATAACTATTGCAGACTCTATGCCGATGACTCCACGACGAGTCTTTCTAGTTTTCAGTTCGTGTTT',\
                         'NC_001613.1' : 'TTAAAACAGCCTGTGGGTTGTACCCACCCACAGGGCCCACTGGGCGCTAGCACTCTGATTCTACGGAATCCTTGTGCGCC'}
     try:
         for (sequence_name, sequence_record), (sequence_name_test, sequence_test) in zip(genome_dict.items(), genome_dict_test.items()):
-            assert sequence_name == sequence_name_test and sequence_record.seq == sequence_test
+            assert (sequence_name == sequence_name_test) and (sequence_record.seq == sequence_test)
         print('-------Assertion test for function "fasta_parsing" successfully finished!-------')
     except AssertionError:
         type, value, tb = sys.exc_info()
@@ -159,9 +162,7 @@ def simulate_sequencing_errors_test():
                 snv_num += len(snv_pos)
                 ins_num += len(ins_pos)
                 del_num += len(del_pos)
-        #print(snv_num/(500*len(read1)))
-        #print(ins_num/(500*len(read1)))
-        #print(del_num/(500*len(read1)))
+       
         assert  ((snv_rate - 1) <= snv_num/(num_of_reads*len(read1))) and (snv_num/(num_of_reads*len(read1)) <= (snv_rate + 1))
         assert  ((ins_rate - 1) <= ins_num/(num_of_reads*len(read1))) and (ins_num/(num_of_reads*len(read1)) <= (ins_rate + 1))
         assert  ((del_rate - 1) <= del_num/(num_of_reads*len(read1))) and (del_num/(num_of_reads*len(read1)) <= (del_rate + 1))

@@ -20,8 +20,14 @@ def parse_arguments():
     parser.add_argument('--bwa_mem', help="BWA MEM SAM file path", type=str)
     parser.add_argument('--bowtie', help="Bowtie SAM file path", type=str)
     parser.add_argument('--sim', help="Simulator SAM file path", type=str)
-    parser.add_argument('--mode', help="--mode compare for comparison mode, --mode sim for simulation mode. It's necssary to start simulation first and then comparison.", type=str, default="sim")
+    parser.add_argument('--mode', help="--mode compare for comparison mode, --mode sim for simulation mode, --mode multi for multiple comparison. It's necssary to start simulation first and then comparison.", type=str, default="sim")
     parser.add_argument('--gen_name', help="Genome name", type=str)
-
+    parser.add_argument('--sam_list', help="List of paths with SAM files to compare", nargs="+")
+    parser.add_argument('--num_of_sets', help="Number of sets for each genome", type=int)
+    # for multiple comparison its neccessary that bowtie SAM files have _bowtie in filename, and bwa mem SAM files _bwa_mem
+    # also SAM files generated from same fastq files, from same set need to have same id
+    # every SAM group of files needs to have id as ord number starting from 0 and ending with number of sets - 1
+    # example of command: ./source/dna_seq_sim_ana.py --mode multi --sam list path/to/sam/files/genome1_name 
+    # path/to/sam/files/genome2_name path/to/sam/files/genome3_name
     return parser.parse_args()
 

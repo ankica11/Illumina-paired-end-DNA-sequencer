@@ -297,15 +297,9 @@ def compare_single(args):
     get_fcore_histogram_single_mode(bwa_data, bowtie_data, genome_name)
 
     t_end = datetime.now()
-    print("DnaSeqSimAna: Comparison finished in {}.".format(t_end))
+    print("DnaSeqSimAna: Comparison finished in {}.".format(t_end - t_start))
    
     
 
 
-#simulator_sam_file = "./testing/Staphylococcus borealis/3/GCF_003042555.1_ASM304255v1_genomic.sam"
-#bwa_sam_file = "./testing/Staphylococcus borealis/3/GCF_003042555.1_ASM304255v1_genomic_bwa_mem.sam"
-#bowtie_sam_file = "./testing/Staphylococcus borealis/3/GCF_003042555.1_ASM304255v1_genomic_bowtie.sam"
-#genome_name="Staphylococcus borealis"
-
-#compare_single(simulator_sam_file, bwa_sam_file, bowtie_sam_file, genome_name)
 

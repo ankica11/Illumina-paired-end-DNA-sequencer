@@ -5,6 +5,7 @@
 from argument_parser import parse_arguments
 from simulator import simulate_sequencing
 from comparator import compare_single
+from comparator_multiple import compare_multiple
 
 
 def main():
@@ -23,6 +24,8 @@ def main():
         else:
             #print("starting comparison")
             compare_single(args)
+    elif(args.mode == "multi"):
+        compare_multiple(args.sam_list, args.num_of_sets)
 
 
 if __name__ == "__main__":
