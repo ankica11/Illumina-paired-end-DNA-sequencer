@@ -66,4 +66,10 @@ __--mode__ - choosing mode, if mode == compare then comparison is started
 __--mode__ - choosing mode, if mode == multi then multiple comparison is started</br>
 __--sam_list__ - list of paths to tested genome's SAM files</br>
 __--num_of_sets__ - number of sets</br>
+For directory structure that looks like this:</br>
+
+![2022-05-22 (1)](https://user-images.githubusercontent.com/76231958/169705479-9492fefc-be3c-44b0-8453-c2881f32318d.png)
+![2022-05-22 (2)](https://user-images.githubusercontent.com/76231958/169705488-5f8be976-5bb7-4382-974c-ce3824dc8356.png) </br>
+__Example of usage would be:__ --mode multi --sam_list _path/to/Clostridium/Clostridium_tetani path/to/Tuberculosis/Mycobacterium_tuberculosis path/to/Herpesvirus/Human_herpesvirus_ --num_of_sets 5
+
 
