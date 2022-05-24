@@ -76,5 +76,5 @@ def genomes_info_table():
 
 
 
-set_errors_table()
-genomes_info_table()
+#set_errors_table()
+#genomes_info_table()

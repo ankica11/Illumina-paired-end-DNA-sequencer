@@ -51,12 +51,15 @@ def generate_fastq_files(coverage, single_read_length, average_quality, ins_size
     out_dir_fastq_path = fastq_path      # directory for output fastq files of simulator, if not defined by user default is out_fastq
     
     if not os.path.exists(out_dir_fastq_path):
-        os.system('mkdir ' + out_dir_fastq_path)
+        os.mkdir(out_dir_fastq_path)
+        
     #creating empty fastq files in out directory
     fastq_filename_1=fasta_filename + "_1.fastq"
     fastq_filename_2=fasta_filename + "_2.fastq"
     fastq_files = [os.path.join(out_dir_fastq_path, fastq_filename_1),\
                    os.path.join(out_dir_fastq_path, fastq_filename_2)]
+    
+    
 
     #removing existing files
     for file in fastq_files:
@@ -67,7 +70,7 @@ def generate_fastq_files(coverage, single_read_length, average_quality, ins_size
     #creating empty SAM file
     out_sam_dir_path = sam_path      # directory for output sam files of simulator, if not defined by user default is out_sam
     if not os.path.exists(out_sam_dir_path):
-        os.system('mkdir ' + out_sam_dir_path)
+        os.mkdir(out_sam_dir_path)
     sam_filename = fasta_filename + ".sam"
     sam_file_path = os.path.join(out_sam_dir_path, sam_filename)
     if os.path.exists(sam_file_path):
