@@ -163,11 +163,14 @@ def simulate_sequencing_errors_test():
                 ins_num += len(ins_pos)
                 del_num += len(del_pos)
        
-        assert  ((snv_rate - 1) <= snv_num/(num_of_reads*len(read1))) and (snv_num/(num_of_reads*len(read1)) <= (snv_rate + 1))
-        assert  ((ins_rate - 1) <= ins_num/(num_of_reads*len(read1))) and (ins_num/(num_of_reads*len(read1)) <= (ins_rate + 1))
-        assert  ((del_rate - 1) <= del_num/(num_of_reads*len(read1))) and (del_num/(num_of_reads*len(read1)) <= (del_rate + 1))
+        assert  round(snv_num/(num_of_reads*len(read1)), 3) == snv_rate
+        assert  round(ins_num/(num_of_reads*len(read1)), 3) == ins_rate
+        assert  round(del_num/(num_of_reads*len(read1)), 3) == del_rate
+        
         print('-------Assertion test for function "simulate_sequencing_errors" successfully finished!-------')
+        
     except AssertionError:
+       
         type, value, tb = sys.exc_info()
         tb_info = traceback.extract_tb(tb)
         filename, line, func, text = tb_info[-1]
