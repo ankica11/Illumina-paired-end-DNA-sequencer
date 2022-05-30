@@ -29,7 +29,11 @@ Both Bowtie SAM file and BWA MEM SAM file are first compared with simulator's SA
 
 ![image](https://user-images.githubusercontent.com/76231958/169332386-013c93f1-cb60-488c-869d-02ff3b0c5b6e.png)
 
-
+# Prerequisites
+__biopython__ pip install biopython / conda install biopython (with Anaconda) <br>
+__pandas__ pip install pandas / conda install pandas (with Anaconda) <br>
+__matplotlib__ pip install matplotlib / conda install matplotlib (with Anaconda) <br>
+__numpy__ pip install numpy / conda install numpy (with Anaconda)<br>
 
 # Usage
 ## Simulating mode(default)
